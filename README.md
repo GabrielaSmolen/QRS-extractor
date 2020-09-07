@@ -1,6 +1,6 @@
 # QRS-extractor
 ## Project goals:
-- [x] visualise MIT signal
+- [x] visualize MIT signal
 - [ ] perform QRS detection
 - [ ] extract QRS to csv
 - [ ] predict whether QRS is or abnormal
