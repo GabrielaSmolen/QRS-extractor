@@ -22,6 +22,8 @@ def qrs_extractor_to_csv(signal_path):
         qrs = signal.p_signal[int(sample - window_len):int(sample + window_len), 0]
         qrs_list.append(qrs.tolist())
 
+    # qrs_list = list(set(tuple(qrs_list)))
+
     extracted_qrs = pd.DataFrame(qrs_list)
     extracted_qrs.to_csv(signal_path+'.csv', index=False, header=False)
 
@@ -30,6 +32,8 @@ if __name__ == '__main__':
     root = 'data/mit-bih-arrhythmia-database-1.0.0'
 
     files = [file[0:3] for file in listdir(root) if isfile(join(root, file))]
+
+    files = sorted(list(set(files)))
 
     for file in files:
         print(file)
