@@ -18,11 +18,11 @@ class QRS:
         This method predicts if qrs is normal or abnormal
         based on calculated features.
         """
-        self.surface = np.sum(np.abs(self.samples))
-        self.max_ampl = np.abs(self.samples).max()
-        if self.surface <= 50:
+        self.surface = np.sum(np.abs(self.filtered_samples))
+        self.max_ampl = np.abs(self.filtered_samples).max()
+        if self.surface <= 40:
             self.label = 'N'
-        if self.surface > 50:
+        if self.surface > 40:
             self.label = 'V'
 
     def get_label(self):
