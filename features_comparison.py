@@ -5,14 +5,23 @@ import matplotlib.pyplot as plt
 qrs_normal = pd.read_csv('data/mit-bih-arrhythmia-database-1.0.0/228_normal.csv', header=None)
 qrs_abnormal = pd.read_csv('data/mit-bih-arrhythmia-database-1.0.0/228_abnormal.csv', header=None)
 
-# features = []
-# for i in range(0, len(qrs_normal.values)):
-#     qrs = qrs_normal.values[i, :]
-#     feature = sum(abs(qrs))
-#     features.append(feature)
+features_normal = []
+features_abnormal = []
 
-features_normal = np.sum(np.abs(qrs_normal.values), axis=1)
-features_abnormal = np.sum(np.abs(qrs_abnormal.values), axis=1)
+for i in range(0, len(qrs_normal.values)):
+    qrs = qrs_normal.values[i, :]
+    qrs = qrs - np.mean(qrs)
+    feature = sum(abs(qrs))
+    features_normal.append(feature)
+
+for i in range(0, len(qrs_abnormal.values)):
+    qrs = qrs_abnormal.values[i, :]
+    qrs = qrs - np.mean(qrs)
+    feature = sum(abs(qrs))
+    features_abnormal.append(feature)
+
+# features_normal = np.sum(np.abs(qrs_normal.values), axis=1)
+# features_abnormal = np.sum(np.abs(qrs_abnormal.values), axis=1)
 
 # plt.boxplot(features_normal)
 # plt.boxplot(features_abnormal)
