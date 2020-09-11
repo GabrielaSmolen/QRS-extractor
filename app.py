@@ -1,14 +1,16 @@
 from flask import Flask, jsonify, request
 from base_objects import QRS
+import logging
 import json
 import numpy as np
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    print('Request received')
+    logging.info('Request received')
     if request.method == 'POST':
         posted_data = request.get_json()
         data = json.loads(posted_data['samples'])
@@ -16,7 +18,7 @@ def predict():
         qrs = QRS(data)
         qrs.process()
         result = qrs.get_label()
-        print('Processing done. Predicted label {}'.format(result))
+        logging.info('Processing done. Predicted label {}'.format(result))
         return jsonify(str("QRS label is " + str(result)))
 
 
