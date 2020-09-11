@@ -16,9 +16,9 @@ def predict():
         qrs = QRS(data)
         qrs.process()
         result = qrs.get_label()
-        print('Processing done')
+        print('Processing done. Predicted label {}'.format(result))
         return jsonify(str("QRS label is " + str(result)))
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
