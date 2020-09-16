@@ -2,3 +2,4 @@
 data/
 qrs.csv
 venv/
+__pycache__/
