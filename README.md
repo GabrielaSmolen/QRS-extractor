@@ -2,7 +2,8 @@
 
 ## Project goals:
 - [x] visualize MIT signal
-- [ ] perform QRS detection
+- [x] custom QRS detector implementation
+- [x] perform QRS detection
 - [x] extract QRS to csv
 - [x] predict whether QRS is or abnormal
 - [x] write API that receives QRS and says whether it's normal
@@ -24,11 +25,4 @@ Example request:
 Expected output:
 
 `"QRS label is V"`
-
-## Done 
-- [x] Installing PyCharm
-- [x] Setting interpreter for a project
-- [x] Installing wfdb package
-- [x] Learning basics of git
-- [x] Using debugger
 
