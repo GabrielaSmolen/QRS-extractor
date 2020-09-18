@@ -18,7 +18,7 @@ def qrs_extractor_to_csv(signal_path):
     normal_qrs = []
     abnormal_qrs = []
 
-    for sample, symbol in zip(samples,symbols):
+    for sample, symbol in zip(samples, symbols):
         qrs = signal.p_signal[int(sample - window_len):int(sample + window_len), 0]
         if symbol in ['N', 'R', 'L', 'j', 'e']:
             normal_qrs.append(qrs.tolist())
@@ -34,7 +34,7 @@ def qrs_extractor_to_csv(signal_path):
 
 if __name__ == '__main__':
 
-    root = 'data/mit-bih-arrhythmia-database-1.0.0'
+    root = '../data/mit-bih-arrhythmia-database-1.0.0'
 
     files = [file[0:3] for file in listdir(root) if isfile(join(root, file))]
     files = sorted(list(set(files)))
