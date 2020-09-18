@@ -4,6 +4,7 @@ import numpy as np
 from scipy.signal import butter, lfilter, freqz, filtfilt
 import matplotlib.pyplot as plt
 import wfdb
+import pandas as pd
 
 
 def plot_freqz(b, a):
@@ -61,11 +62,10 @@ def derivative_filter(samples):
 
 
 def square(samples):
-    square = np.square(samples)
-    return square
+    return np.square(samples)
 
 
-def moving_average_filter(samples):
+def moving_average_filter(samples, fs):
     convolution = np.convolve(samples, np.ones(int(150*fs/1000))/int((150*fs/1000)), mode='same')
     return convolution
 
@@ -86,7 +86,7 @@ def find_peaks(samples, fs):
     return peaks, initial_peaks
 
 
-def choose_qrs_peaks(samples, fs, peaks, peakes_indexes):
+def choose_qrs_peaks(samples, fs, peaks, peaks_indexes):
     noiselevel = np.average(samples[0:fs*2])
     signallevel = np.max(samples[0:fs*2])
 
@@ -110,24 +110,15 @@ def choose_qrs_peaks(samples, fs, peaks, peakes_indexes):
     return noiselevel_list, signallevel_list, threshold_list, final_peaks_indexes
 
 
-if __name__ == '__main__':
-    signal = wfdb.rdrecord('data/mit-bih-arrhythmia-database-1.0.0/100')
-    samp_to = 10000
-    samples = signal.p_signal[0:samp_to, 0]
+def detect_qrs(samples, cutoff, fs, order, toplot=False):
 
-    order = 3
-    fs = signal.fs
-    cutoff = 20
-
-    b, a = butter_lowpass(cutoff, fs, order)
     lowpass = butter_lowpass_filter(samples, cutoff, fs, order)
 
-    b, a = butter_highpass(cutoff, fs, order)
     highpass = butter_highpass_filter(lowpass, cutoff, fs, order)
 
     derivative = derivative_filter(highpass)
-    square = square(derivative)
-    averaged_signal = moving_average_filter(square)
+    squared = square(derivative)
+    averaged_signal = moving_average_filter(squared, fs)
 
     peaks_indexes, initial_peaks_indexes = find_peaks(averaged_signal, fs)
     initial_peaks = averaged_signal[initial_peaks_indexes]
@@ -135,17 +126,34 @@ if __name__ == '__main__':
 
     noise, signal, threshold, final_peaks = choose_qrs_peaks(averaged_signal, fs, peaks, peaks_indexes)
 
-    plt.figure()
-    plt.plot(peaks_indexes, peaks, 'o')
-    plt.plot(initial_peaks_indexes, initial_peaks, '.')
-    plt.plot(averaged_signal)
-    plt.plot(peaks_indexes, noise, '--')
-    plt.plot(peaks_indexes, signal, '--')
-    plt.plot(peaks_indexes, threshold, '--')
-    plt.show(block=False)
+    if toplot:
+        plt.figure()
+        plt.plot(peaks_indexes, peaks, 'o')
+        plt.plot(initial_peaks_indexes, initial_peaks, '.')
+        plt.plot(averaged_signal)
+        plt.plot(peaks_indexes, noise, '--')
+        plt.plot(peaks_indexes, signal, '--')
+        plt.plot(peaks_indexes, threshold, '--')
+        plt.show(block=False)
 
-    plt.figure()
-    plt.plot(samples)
-    plt.plot(final_peaks, samples[final_peaks], 'ro')
-    plt.show(block=False)
-    print()
+        plt.figure()
+        plt.plot(samples)
+        plt.plot(final_peaks, samples[final_peaks], 'ro')
+        plt.show(block=False)
+
+    return final_peaks
+
+
+# if __name__ == '__main__':
+#     signal = wfdb.rdrecord('../data/mit-bih-arrhythmia-database-1.0.0/100')
+#     sampto = 10000
+#     samples = signal.p_signal[0:sampto, 0]
+#
+#     order = 3
+#     fs = signal.fs
+#     cutoff = 20
+#
+#     final_peaks = detect_qrs(samples, cutoff=cutoff, fs=fs, order=order)
+#
+#     wfdb.wrann('final_peaks', 'pred', np.array(final_peaks), symbol=['N']*len(final_peaks))
+
