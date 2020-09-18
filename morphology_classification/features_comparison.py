@@ -45,8 +45,8 @@ def calculating_features_with_broadcasting(qrs_normal, qrs_abnormal):
 
 if __name__ == '__main__':
 
-    qrs_normal = pd.read_csv('data/mit-bih-arrhythmia-database-1.0.0/228_normal.csv', header=None)
-    qrs_abnormal = pd.read_csv('data/mit-bih-arrhythmia-database-1.0.0/228_abnormal.csv', header=None)
+    qrs_normal = pd.read_csv('../data/mit-bih-arrhythmia-database-1.0.0/228_normal.csv', header=None)
+    qrs_abnormal = pd.read_csv('../data/mit-bih-arrhythmia-database-1.0.0/228_abnormal.csv', header=None)
 
     # features_normal, features_abnormal = calculating_features_with_for(qrs_normal, qrs_abnormal)
     features_normal, features_abnormal = calculating_features_with_broadcasting(qrs_normal, qrs_abnormal)
