@@ -20,9 +20,9 @@ def plot_wfdb(signal, annotation, samp_to):
 
 if __name__ == '__main__':
 
-    signal = wfdb.rdrecord('data/mit-bih-arrhythmia-database-1.0.0/100', sampto=15000)
+    signal = wfdb.rdrecord('../data/mit-bih-arrhythmia-database-1.0.0/100', sampto=15000)
 
-    annotation = wfdb.rdann('data/mit-bih-arrhythmia-database-1.0.0/100', 'atr', sampto=15000)
+    annotation = wfdb.rdann('../data/mit-bih-arrhythmia-database-1.0.0/100', 'atr', sampto=15000)
     wfdb.plot_wfdb(record=signal, annotation=annotation)
 
     samp_to = 2000
