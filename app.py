@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from base_objects import QRS
+from utils.base_objects import QRS
 import logging
 import json
 import numpy as np
