@@ -86,7 +86,7 @@ def find_peaks(samples, fs):
     return peaks, initial_peaks
 
 
-def choose_qrs_peaks(samples, fs, peaks, peaks_indexes):
+def choose_qrs_peaks(samples, fs, peaks, peaks_indices):
     noiselevel = np.average(samples[0:fs*2])
     signallevel = np.max(samples[0:fs*2])
 
@@ -95,13 +95,13 @@ def choose_qrs_peaks(samples, fs, peaks, peaks_indexes):
     threshold_list = []
     final_peaks_indexes = []
 
-    for peak, peak_index in zip(peaks, peaks_indexes):
+    for peak, peak_indice in zip(peaks, peaks_indices):
         threshold = noiselevel + 0.25 * (signallevel - noiselevel)
         if peak < threshold:
             noiselevel = 0.125 * peak + 0.875 * noiselevel
         else:
             signallevel = 0.125 * peak + 0.875 * signallevel
-            final_peaks_indexes.append(peak_index)
+            final_peaks_indexes.append(peak_indice)
 
         threshold_list.append(threshold)
         signallevel_list.append(signallevel)
@@ -120,20 +120,20 @@ def detect_qrs(samples, cutoff, fs, order, toplot=False):
     squared = square(derivative)
     averaged_signal = moving_average_filter(squared, fs)
 
-    peaks_indexes, initial_peaks_indexes = find_peaks(averaged_signal, fs)
-    initial_peaks = averaged_signal[initial_peaks_indexes]
-    peaks = averaged_signal[peaks_indexes]
+    peaks_indices, initial_peaks_indices = find_peaks(averaged_signal, fs)
+    initial_peaks = averaged_signal[initial_peaks_indices]
+    peaks = averaged_signal[peaks_indices]
 
-    noise, signal, threshold, final_peaks = choose_qrs_peaks(averaged_signal, fs, peaks, peaks_indexes)
+    noise, signal, threshold, final_peaks = choose_qrs_peaks(averaged_signal, fs, peaks, peaks_indices)
 
     if toplot:
         plt.figure()
-        plt.plot(peaks_indexes, peaks, 'o')
-        plt.plot(initial_peaks_indexes, initial_peaks, '.')
+        plt.plot(peaks_indices, peaks, 'o')
+        plt.plot(initial_peaks_indices, initial_peaks, '.')
         plt.plot(averaged_signal)
-        plt.plot(peaks_indexes, noise, '--')
-        plt.plot(peaks_indexes, signal, '--')
-        plt.plot(peaks_indexes, threshold, '--')
+        plt.plot(peaks_indices, noise, '--')
+        plt.plot(peaks_indices, signal, '--')
+        plt.plot(peaks_indices, threshold, '--')
         plt.show(block=False)
 
         plt.figure()
