@@ -8,8 +8,8 @@ def plot_wfdb(signal, annotation, samp_to):
     part = signal.p_signal[0:samp_to, 0]
     plt.plot(part)
 
-    indexes = np.where(annotation.sample < samp_to)
-    sample = annotation.sample[indexes]
+    indices = np.where(annotation.sample < samp_to)
+    sample = annotation.sample[indices]
 
     length = len(sample)
     values = np.ones(length)
