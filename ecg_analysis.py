@@ -35,7 +35,7 @@ def qrs_analysis(signal):
 
 
 if __name__ == '__main__':
-    signal = wfdb.rdrecord('../data/mit-bih-arrhythmia-database-1.0.0/100')
+    signal = wfdb.rdrecord('data/mit-bih-arrhythmia-database-1.0.0/100')
     samples = np.array(signal.p_signal[:, 0])
     fs = signal.fs
 
