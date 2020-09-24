@@ -3,6 +3,7 @@ from utils.base_objects import QRS
 import logging
 import json
 import numpy as np
+from ecg_analysis import qrs_analysis
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +21,17 @@ def predict():
         result = qrs.get_label()
         logging.info('Processing done. Predicted label {}'.format(result))
         return jsonify(str("QRS label is " + str(result)))
+
+
+@app.route("/detect", methods=["POST"])
+def detect():
+    logging.info('Request received')
+    if request.method == 'POST':
+        posted_data = request.get_json()
+        data = json.loads(posted_data['samples'])
+        morphology = qrs_analysis(data)
+        logging.info('Processing done. Predicted morphology labels: {}'.format(morphology))
+        return jsonify(str("QRS morphology labels are " + str(morphology)))
 
 
 if __name__ == '__main__':
