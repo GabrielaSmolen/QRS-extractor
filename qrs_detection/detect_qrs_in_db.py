@@ -15,5 +15,5 @@ if __name__ == '__main__':
         signal = wfdb.rdrecord(join(root, file))
         samples = signal.p_signal[:, 0]
         fs = signal.fs
-        final_peaks = qrs_detection.detect_qrs(samples, cutoff=20, fs=fs, order=3)
+        final_peaks = qrs_detection.detect_qrs(samples, cutoff_low=15, cutoff_high=5, fs=fs, order=3)
         wfdb.wrann(file, 'pred', np.array(final_peaks), symbol=['N'] * len(final_peaks), write_dir=root)
