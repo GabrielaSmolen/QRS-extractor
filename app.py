@@ -28,13 +28,13 @@ def detect():
     logging.info('Request received')
     if request.method == 'POST':
         posted_data = request.get_json()
-        samples = json.loads(posted_data['samples'])
+        samples = posted_data['samples']
         samples = np.array(samples)
         fs = 360
         morphology, detected_indices = qrs_analysis(samples, fs)
         result = {}
         for m, d in zip(morphology, detected_indices):
-            result.append("m" == d)
+            result[d] = m
         logging.info('Processing done. Predicted morphology labels: {}'.format(result))
         return jsonify(str("QRS morphology labels are " + str(result)))
 
