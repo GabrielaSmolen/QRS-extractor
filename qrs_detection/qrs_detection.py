@@ -7,7 +7,7 @@ import wfdb
 import pandas as pd
 
 
-def plot_freqz(b, a):
+def plot_freqz(b, a, cutoff, fs):
     plt.figure()
     w, h = freqz(b, a, worN=8000)
     plt.plot(0.5 * fs * w / np.pi, np.abs(h), 'b')
@@ -30,28 +30,28 @@ def plot_filtration_result(original, filtered):
     plt.show()
 
 
-def butter_lowpass(cutoff, fs, order):
+def butter_lowpass(cutoff_low, fs, order):
     nyq = 0.5 * fs
-    normal_cutoff = cutoff / nyq
+    normal_cutoff = cutoff_low / nyq
     b, a = butter(order, normal_cutoff, btype='low', analog=False)
     return b, a
 
 
-def butter_lowpass_filter(data, cutoff, fs, order):
-    b, a = butter_lowpass(cutoff, fs, order=order)
+def butter_lowpass_filter(data, cutoff_low, fs, order):
+    b, a = butter_lowpass(cutoff_low, fs, order=order)
     y = filtfilt(b, a, data)
     return y
 
 
-def butter_highpass(cutoff, fs, order):
+def butter_highpass(cutoff_high, fs, order):
     nyq = 0.5 * fs
-    normal_cutoff = cutoff / nyq
+    normal_cutoff = cutoff_high / nyq
     b, a = butter(order, normal_cutoff, btype='high', analog=False)
     return b, a
 
 
-def butter_highpass_filter(data, cutoff, fs, order):
-    b, a = butter_highpass(cutoff, fs, order=order)
+def butter_highpass_filter(data, cutoff_high, fs, order):
+    b, a = butter_highpass(cutoff_high, fs, order=order)
     y = filtfilt(b, a, data)
     return y
 
@@ -110,11 +110,11 @@ def choose_qrs_peaks(samples, fs, peaks, peaks_indices):
     return noiselevel_list, signallevel_list, threshold_list, final_peaks_indexes
 
 
-def detect_qrs(samples, cutoff, fs, order, toplot=False):
+def detect_qrs(samples, cutoff_low, cutoff_high, fs, order, toplot=False):
 
-    lowpass = butter_lowpass_filter(samples, cutoff, fs, order)
+    lowpass = butter_lowpass_filter(samples, cutoff_low, fs, order)
 
-    highpass = butter_highpass_filter(lowpass, cutoff, fs, order)
+    highpass = butter_highpass_filter(lowpass, cutoff_high, fs, order)
 
     derivative = derivative_filter(highpass)
     squared = square(derivative)
@@ -144,16 +144,16 @@ def detect_qrs(samples, cutoff, fs, order, toplot=False):
     return final_peaks
 
 
-# if __name__ == '__main__':
-#     signal = wfdb.rdrecord('../data/mit-bih-arrhythmia-database-1.0.0/100')
-#     sampto = 10000
-#     samples = signal.p_signal[0:sampto, 0]
-#
-#     order = 3
-#     fs = signal.fs
-#     cutoff = 20
-#
-#     final_peaks = detect_qrs(samples, cutoff=cutoff, fs=fs, order=order)
+if __name__ == '__main__':
+    signal = wfdb.rdrecord('../data/mit-bih-arrhythmia-database-1.0.0/100')
+    sampto = 30000
+    samples = signal.p_signal[0:sampto, 0]
+
+    order = 3
+    fs = signal.fs
+    cutoff = 20
+
+    final_peaks = detect_qrs(samples, cutoff_low=15, cutoff_high=5, fs=fs, order=order, toplot=True)
 #
 #     wfdb.wrann('final_peaks', 'pred', np.array(final_peaks), symbol=['N']*len(final_peaks))
 
