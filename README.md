@@ -26,3 +26,14 @@ Expected output:
 
 `"QRS label is V"`
 
+To run server that detects QRS morphology run:
+
+`python app.py`
+
+Example request:
+
+`curl -H "Content-Type: application/json" -d @data/test_samples.json http://127.0.0.1:5000/detect`
+
+Expected output:
+
+`"QRS morphology labels are {78: 'N', 372: 'N', 948: 'N', 1516: 'N', 1810: 'N', 2046: 'N', 2403: 'N', 2707: 'N'}"`
