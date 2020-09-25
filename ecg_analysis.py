@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def qrs_analysis(samples: np.ndarray, fs: int):
-    detected_qrs_samples_indices = np.array(detect_qrs(samples, cutoff=20, fs=fs, order=3))
+    detected_qrs_samples_indices = np.array(detect_qrs(samples, cutoff_low=15, cutoff_high=5, fs=fs, order=3))
     detected_qrs_samples = samples[detected_qrs_samples_indices[:-1]]
     detected_qrs_samples = detected_qrs_samples.tolist()
     window_len = 150 * fs / 1000
